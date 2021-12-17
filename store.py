@@ -139,5 +139,5 @@ def main():
         print(f'Please see the count list for store at location {address}', inventory)
         print('')
         print(Store.store_dict_get())'''
-    
-main()
+if __name__ == "__main__":    
+    main()
