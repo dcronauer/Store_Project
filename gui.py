@@ -7,7 +7,7 @@ from store import *
 
 
 def main():
-    instance = Store_Gui()
+    create_window = Store_Gui()
 
     #set up main loop for gui
     tkinter.mainloop()
@@ -16,10 +16,11 @@ class Store_Gui:
     list_stores = []
     def __init__(self):
         self.main_window = tkinter.Tk()
-        self.create_objects()
+        
         self.instance = tkinter.StringVar()
         self.store_id = tkinter.IntVar()
         self.store_address = tkinter.StringVar()
+        self.create_objects()
     
     def create_objects(self):
         #create frames
