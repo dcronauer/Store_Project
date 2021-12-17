@@ -21,6 +21,9 @@ class Store_Gui:
         self.store_id = tkinter.IntVar()
         self.store_address = tkinter.StringVar()
         self.create_objects()
+    def __str__(self):
+        return Store_Gui.list_stores
+        
     
     def create_objects(self):
         #create frames
@@ -34,9 +37,9 @@ class Store_Gui:
         self.store_initialize_label_id = ttk.Label(self.store_creation_frame,text="Enter id for new store: ")
         self.store_initialize_entry_id = ttk.Entry(self.store_creation_frame,textvariable=self.store_id, width = 15)
         self.store_initialize_label_city = ttk.Label(self.store_creation_frame,text="Enter city location of store being created: ")
-        self.store_initialize_entry_id = ttk.Entry(self.store_creation_frame,textvariable=self.store_address, width = 15)
+        self.store_initialize_entry_city = ttk.Entry(self.store_creation_frame,textvariable=self.store_address, width = 15)
 
-        self.store_inialize_button = ttk.Button(self.store_creation_frame,text="Create new store",command=self.create_store)
+        self.store_initialize_button = ttk.Button(self.store_creation_frame,text="Create new store",command=self.create_store)
 
         #pack widgets
         self.store_initialize_label_instance.pack(side="left")
@@ -47,20 +50,25 @@ class Store_Gui:
         self.store_initialize_entry_city.pack(side="left")
         self.store_initialize_button.pack(side="left")
 
+        #pack frame
+        self.store_creation_frame.pack()
+
 
 
 
 
     def create_store(self):
         create = self.instance.get()
-        create = store.Store(self.store_id.get(),self.store_address.get())
-
-        string = print(store.Store.store_dict_get())
+        create = Store(self.store_id.get(),self.store_address.get())
+        Store_Gui.list_stores.append(create)
+        string = Store.store_dict_get()
         tkinter.messagebox.showinfo('Entry Complete',f'Here is the updated store listing {string}')
 
         self.instance.set('')
-        self.store_id_set('')
-        self.store_addess_set('')
+        self.store_id.set('')
+        self.store_address.set('')
+
+        
 
 
 
