@@ -4,6 +4,7 @@
 #create store
 class Store:
     store_dict = {}
+    
    
     def __init__(self,store_id,store_address):
         self.store_id = store_id
@@ -21,7 +22,7 @@ class Store:
         self.store_address = store_address
     def store_dict_get():
         return Store.store_dict
-   
+    
 #create inventory for store instance   
 class Inventory(Store):
     def __init__(self,store_id,store_address):
@@ -131,13 +132,5 @@ def main():
     print(Register1.cash_balance_get())
     
    
-    '''#print inventory information for each store
-    for i in list_stores:
-        inventory, item, address = Inventory.inventory_dict_get(i)
-        print(f'Please see the price list for store at location {address}', item)
-        print('')
-        print(f'Please see the count list for store at location {address}', inventory)
-        print('')
-        print(Store.store_dict_get())'''
 if __name__ == "__main__":    
     main()
