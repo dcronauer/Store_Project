@@ -13,6 +13,7 @@ def main():
 
 class Store_Gui:
     list_stores = []
+    id_stores = []
     def __init__(self):
         self.main_window = tkinter.Tk()
         
@@ -22,6 +23,7 @@ class Store_Gui:
         self.item_name = tkinter.StringVar()
         self.item_price = tkinter.IntVar()
         self.item_count = tkinter.IntVar()
+        self.id_store = tkinter.IntVar()
         self.list_box_stores = tkinter.StringVar(value=Store_Gui.list_stores)
         
         self.create_objects()
@@ -58,7 +60,8 @@ class Store_Gui:
         self.store_creation_frame.pack()
 
         #create widgets inventory_management_frame
-        self.display_stores_listbox = ttk.Combobox(self.inventory_management_frame,value=Store_Gui.list_stores,postcommand = self.update_store_list)
+        self.display_stores_listbox = ttk.Combobox(self.inventory_management_frame,postcommand = self.update_store_list, height=20)
+        
         self.inventory_label_item = ttk.Label(self.inventory_management_frame,text="Item Name")
         self.inventory_entry_item = ttk.Entry(self.inventory_management_frame, textvariable=self.item_name, width=15)
         self.inventory_label_price = ttk.Label(self.inventory_management_frame,text="Item Price")
@@ -84,27 +87,36 @@ class Store_Gui:
         create = self.instance.get()
         
         create = Inventory(self.store_id.get(),self.store_address.get())
+        storeid = create.store_id_get()
+        Store_Gui.id_stores.append(int(storeid))
+        if str(storeid) not in self.display_stores_listbox['values']:
+            self.display_stores_listbox['values'] = tuple(list(self.display_stores_listbox['values']) + [str(storeid)])
         Store_Gui.list_stores.append(create)
+        
         string = Store.store_dict_get()
         tkinter.messagebox.showinfo('Entry Complete',f'Here is the updated store listing {string}')
-        item = Store_Gui.list_stores
-        
         self.instance.set('')
         self.store_id.set('')
         self.store_address.set('')
+        print(Store_Gui.id_stores)
     def update_store_list(self):
         
-        self.display_stores_listbox.set(Store_Gui.list_stores)
+        self.display_stores_listbox.set(Store_Gui.id_stores)
+    
     def add_item(self):
+        
+        
         item = self.inventory_entry_item.get()
-        price = self.inventory_entry_price.get()
-        count = self.inventory_entry_count.get()
+        price = int(self.inventory_entry_price.get())
+        count = int(self.inventory_entry_count.get())
+        id = int(self.display_stores_listbox.get())
+       
+        print(Store_Gui.id_stores[0])
         
-        
-        new_item = Store_Gui.list_stores[0].new_item(item,price,count)
+        new_item = Store_Gui.list_stores[id].new_item(item,price,count)
 
 
-        print(Store_Gui.list_stores[0].print_inventory_items())
+        print(Store_Gui.list_stores[id].print_inventory_items())
 
 
         
