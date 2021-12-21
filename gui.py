@@ -1,7 +1,6 @@
 #this will provide the gui framework for the store.py file
 import tkinter
 from tkinter import ttk
-from tkinter import messagebox
 from store import *
 import dill
 
@@ -54,6 +53,7 @@ class Store_Gui:
         self.store_initialize_entry_city = ttk.Entry(self.store_creation_frame,textvariable=self.store_address, width = 15)
 
         self.store_initialize_button = ttk.Button(self.store_creation_frame,text="Create new store",command=self.create_store)
+        self.store_store_idlist =ttk.Button(self.store_creation_frame,text="Provide store id",command=self.id_store_get)
 
         #pack widgets store_creation_frame
         self.store_initialize_label_instance.pack(side="left")
@@ -63,6 +63,7 @@ class Store_Gui:
         self.store_initialize_label_city.pack(side="left")
         self.store_initialize_entry_city.pack(side="left")
         self.store_initialize_button.pack(side="left")
+        self.store_store_idlist.pack(side="left")
 
         #pack store_creation_frame frame
         self.store_creation_frame.pack()
@@ -76,6 +77,7 @@ class Store_Gui:
         self.inventory_label_count = ttk.Label(self.inventory_management_frame,text="Item Count")
         self.inventory_entry_count = ttk.Entry(self.inventory_management_frame,textvariable=self.item_count, width=15)
         self.inventory_button = ttk.Button(self.inventory_management_frame,text="Add inventory item to store",command=self.add_item)
+        self.inventory_button_get =ttk.Button(self.inventory_management_frame,text="Inventory Dicts",command=self.inventory_dict)
 
         #pack widgets iventory management frame
         self.display_stores_listbox.pack(side="left")
@@ -86,6 +88,7 @@ class Store_Gui:
         self.inventory_label_count.pack(side="left") 
         self.inventory_entry_count.pack(side="left")
         self.inventory_button.pack(side="left")
+        self.inventory_button_get.pack(side="left")
 
         #pack inventory management frame
         self.inventory_management_frame.pack()
@@ -98,6 +101,8 @@ class Store_Gui:
         self.dill_frame.pack()
 
     def id_store_get(self):
+        string = Store.store_dict_get()
+        tkinter.messagebox.showinfo('List store ids',f'{string}')
         return Store_Gui.id_stores
     def create_store(self):
         create = self.instance.get()
@@ -117,6 +122,13 @@ class Store_Gui:
         self.store_id.set('')
         self.store_address.set('')
         print(Store_Gui.id_stores)
+    def inventory_dict(self):
+        
+        id = self.display_stores_listbox.get()
+
+        inventory, price, address = Store_Gui.list_stores[int(id)].inventory_dict_get()
+        tkinter.messagebox.showinfo("Dictionaries",f'Inventory: {inventory}\n Price: {price}\n Address: {address}')
+    
     def dill_run(self):
         dill.dump_session("dump.pkl")
 
@@ -130,23 +142,14 @@ class Store_Gui:
         
     def add_item(self):
         
-        
-        
-        
+        #get varaiables from entry boxes
         item = self.inventory_entry_item.get()
         price = self.inventory_entry_price.get()
         count = self.inventory_entry_count.get()
         
-           
-       
-      
         id = self.display_stores_listbox.get()
 
-        
-        
-        
         new_item = Store_Gui.list_stores[int(id)].new_item(item,price,count)
-
 
         print(Store_Gui.list_stores[int(id)].print_inventory_items())
 
