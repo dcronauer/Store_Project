@@ -89,9 +89,12 @@ class Store_Gui:
         self.dill_frame.pack()
 
     def id_store_get(self):
-        string = Store_Gui.id_stores
+        
+        for item in Store_Gui.list_stores:
+            Store.store_dict.update({item.store_id : item.store_address})
+        string = Store.store_dict_get()
         tkinter.messagebox.showinfo('List store ids',f'{string}')
-        return Store_Gui.id_stores
+       
     def create_store(self):
         create = self.instance.get()
         idstore = len(Store_Gui.id_stores)
