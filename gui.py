@@ -5,17 +5,10 @@ from store import *
 import dill
 
 
-def main():
-    
-    
-    create_window = Store_Gui()
-   
+def main(): 
+    create_window = Store_Gui()   
     #set up main loop for gui
     tkinter.mainloop()
-    
-
-    
-
 class Store_Gui:
     list_stores = []
     id_stores = []
@@ -24,7 +17,6 @@ class Store_Gui:
         dill.load_session('dump.pkl')
         
         self.instance = tkinter.StringVar()
-        self.store_id = tkinter.IntVar()
         self.store_address = tkinter.StringVar()
         self.item_name = tkinter.StringVar()
         self.item_price = tkinter.IntVar()
@@ -47,8 +39,6 @@ class Store_Gui:
         #create widgets store_creation_frame
         self.store_initialize_label_instance = ttk.Label(self.store_creation_frame,text="Enter instance name for new store: ")
         self.store_initialize_entry_instance = ttk.Entry(self.store_creation_frame,textvariable=self.instance, width = 15)
-        self.store_initialize_label_id = ttk.Label(self.store_creation_frame,text="Enter id for new store: ")
-        self.store_initialize_entry_id = ttk.Entry(self.store_creation_frame,textvariable=self.store_id, width = 15)
         self.store_initialize_label_city = ttk.Label(self.store_creation_frame,text="Enter city location of store being created: ")
         self.store_initialize_entry_city = ttk.Entry(self.store_creation_frame,textvariable=self.store_address, width = 15)
 
@@ -58,8 +48,6 @@ class Store_Gui:
         #pack widgets store_creation_frame
         self.store_initialize_label_instance.pack(side="left")
         self.store_initialize_entry_instance.pack(side="left")
-        self.store_initialize_label_id.pack(side="left")
-        self.store_initialize_entry_id.pack(side="left")
         self.store_initialize_label_city.pack(side="left")
         self.store_initialize_entry_city.pack(side="left")
         self.store_initialize_button.pack(side="left")
@@ -101,13 +89,14 @@ class Store_Gui:
         self.dill_frame.pack()
 
     def id_store_get(self):
-        string = Store.store_dict_get()
+        string = Store_Gui.id_stores
         tkinter.messagebox.showinfo('List store ids',f'{string}')
         return Store_Gui.id_stores
     def create_store(self):
         create = self.instance.get()
-        
-        create = Inventory(self.store_id.get(),self.store_address.get())
+        idstore = len(Store_Gui.id_stores)
+        print(idstore)
+        create = Inventory(idstore,self.store_address.get())
         storeid = create.store_id_get()
         Store_Gui.id_stores.append(int(storeid))
         if str(storeid) not in self.display_stores_listbox['values']:
