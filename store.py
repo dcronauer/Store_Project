@@ -6,10 +6,10 @@ class Store:
     store_dict = {}
     
    
-    def __init__(self,store_id,store_address):
+    def __init__(self,store_address,store_id):
         self.store_id = store_id
         self.store_address = store_address
-        Store.store_dict.update({self.store_id : self.store_address})
+        Store.store_dict.update({self.store_address : self.store_id})
         
     #store get and set
     def store_id_get(self):
@@ -18,15 +18,15 @@ class Store:
         return self.store_address
     def store_id_set(self,store_id):
         self.store_id = store_id
-    def store_address(self,store_address):
+    def store_location(self,store_address):
         self.store_address = store_address
     def store_dict_get():
         return Store.store_dict
     
 #create inventory for store instance   
 class Inventory(Store):
-    def __init__(self,store_id,store_address):
-        super().__init__(store_id,store_address)
+    def __init__(self,store_address,store_id):
+        super().__init__(store_address,store_id)
         self.inventory_dict = {}
         self.item_dict = {}
        
@@ -48,8 +48,8 @@ class Inventory(Store):
         return self.inventory_dict
         
 class Register(Inventory):
-    def __init__(self,store_id,store_address,cash_balance):
-        super().__init__(store_id,store_address)
+    def __init__(self,store_address,store_id,cash_balance):
+        super().__init__(store_address,store_id)
         self.cash_balance = cash_balance
         
     #accessors    

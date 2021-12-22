@@ -15,7 +15,7 @@ class Store_Gui:
     def __init__(self):
         self.main_window = tkinter.Tk()
         dill.load_session('dump.pkl')
-        
+        self.id_store_get()
         self.instance = tkinter.StringVar()
         self.store_address = tkinter.StringVar()
         self.item_name = tkinter.StringVar()
@@ -91,7 +91,7 @@ class Store_Gui:
     def id_store_get(self):
         
         for item in Store_Gui.list_stores:
-            Store.store_dict.update({item.store_id : item.store_address})
+            Store.store_dict.update({item.store_address : item.store_id})
         string = Store.store_dict_get()
         tkinter.messagebox.showinfo('List store ids',f'{string}')
        
@@ -99,24 +99,26 @@ class Store_Gui:
         create = self.instance.get()
         idstore = len(Store_Gui.id_stores)
         print(idstore)
-        create = Inventory(idstore,self.store_address.get())
-        storeid = create.store_id_get()
-        Store_Gui.id_stores.append(int(storeid))
-        if str(storeid) not in self.display_stores_listbox['values']:
-            self.display_stores_listbox['values'] = tuple(list(self.display_stores_listbox['values']) + [str(storeid)])
+        create = Inventory(self.store_address.get(),idstore)
         Store_Gui.list_stores.append(create)
+        storeid = create.store_id_get()
+        Store_Gui.id_stores.append(storeid)
+        address = create.store_address_get()
+        if address not in self.display_stores_listbox['values']:
+            self.display_stores_listbox['values'] = tuple(list(self.display_stores_listbox['values']) + [address])
+        
         
         string = Store.store_dict_get()
         tkinter.messagebox.showinfo('Entry Complete',f'Here is the updated store listing {string}')
         item = Store_Gui.list_stores
         
         self.instance.set('')
-        self.store_id.set('')
         self.store_address.set('')
         print(Store_Gui.id_stores)
     def inventory_dict(self):
         
-        id = self.display_stores_listbox.get()
+        address = self.display_stores_listbox.get()
+        id = Store.store_dict.get(address)
 
         inventory, price, address = Store_Gui.list_stores[int(id)].inventory_dict_get()
         tkinter.messagebox.showinfo("Dictionaries",f'Inventory: {inventory}\n Price: {price}\n Address: {address}')
@@ -128,9 +130,10 @@ class Store_Gui:
     
     def update_store_list(self):
         self.display_stores_listbox['values'] = []
-        for storeid in Store_Gui.id_stores:
-            if str(storeid) not in self.display_stores_listbox['values']:
-                self.display_stores_listbox['values'] = tuple(list(self.display_stores_listbox['values']) + [str(storeid)])
+        keys = Store.store_dict.keys()
+        for location in keys:
+            if location not in self.display_stores_listbox['values']:
+                self.display_stores_listbox['values'] = tuple(list(self.display_stores_listbox['values']) + [location])
         
     def add_item(self):
         
@@ -138,12 +141,17 @@ class Store_Gui:
         item = self.inventory_entry_item.get()
         price = self.inventory_entry_price.get()
         count = self.inventory_entry_count.get()
-        
-        id = self.display_stores_listbox.get()
 
-        new_item = Store_Gui.list_stores[int(id)].new_item(item,price,count)
+        location = self.display_stores_listbox.get()
+        storeid = Store.store_dict.get(location)
 
-        print(Store_Gui.list_stores[int(id)].print_inventory_items())
+        new_item = Store_Gui.list_stores[storeid].new_item(item,price,count)
+
+        print(Store_Gui.list_stores[storeid].print_inventory_items())
+
+        self.item_name.set('')
+        self.item_price.set('')
+        self.item_count.set('')
 
 
         
