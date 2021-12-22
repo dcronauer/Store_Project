@@ -1,6 +1,7 @@
 #this will provide the gui framework for the store.py file
 import tkinter
 from tkinter import ttk
+from tkinter import simpledialog
 from store import *
 import dill
 
@@ -27,6 +28,7 @@ class Store_Gui:
         self.create_objects()
     def __str__(self):
         return f'{Store_Gui.list_stores}'
+        pass
         
     
     def create_objects(self):
@@ -44,6 +46,7 @@ class Store_Gui:
 
         self.store_initialize_button = ttk.Button(self.store_creation_frame,text="Create new store",command=self.create_store)
         self.store_store_idlist =ttk.Button(self.store_creation_frame,text="Provide store id",command=self.id_store_get)
+        
 
         #pack widgets store_creation_frame
         self.store_initialize_label_instance.pack(side="left")
@@ -52,6 +55,7 @@ class Store_Gui:
         self.store_initialize_entry_city.pack(side="left")
         self.store_initialize_button.pack(side="left")
         self.store_store_idlist.pack(side="left")
+        
 
         #pack store_creation_frame frame
         self.store_creation_frame.pack()
@@ -66,6 +70,7 @@ class Store_Gui:
         self.inventory_entry_count = ttk.Entry(self.inventory_management_frame,textvariable=self.item_count, width=15)
         self.inventory_button = ttk.Button(self.inventory_management_frame,text="Add inventory item to store",command=self.add_item)
         self.inventory_button_get =ttk.Button(self.inventory_management_frame,text="Inventory Dicts",command=self.inventory_dict)
+        self.store_update_name = ttk.Button(self.inventory_management_frame,text="Update Store Name",command=self.update_store_name)
 
         #pack widgets iventory management frame
         self.display_stores_listbox.pack(side="left")
@@ -77,11 +82,12 @@ class Store_Gui:
         self.inventory_entry_count.pack(side="left")
         self.inventory_button.pack(side="left")
         self.inventory_button_get.pack(side="left")
+        self.store_update_name.pack(side="left")
 
         #pack inventory management frame
         self.inventory_management_frame.pack()
 
-        #create button dill
+        #create button dill5
         self.dill_button = ttk.Button(self.dill_frame,text="Save Work",command=self.dill_run)
         #pack dill
         self.dill_button.pack()
@@ -94,6 +100,25 @@ class Store_Gui:
             Store.store_dict.update({item.store_address : item.store_id})
         string = Store.store_dict_get()
         tkinter.messagebox.showinfo('List store ids',f'{string}')
+    def update_store_name(self):
+        
+
+        location = self.display_stores_listbox.get()
+        storeid = Store.store_dict.get(location)
+       
+        address = simpledialog.askstring(title="Update Store name",prompt="Enter new store location: ")
+      
+        item = Store_Gui.list_stores[storeid]
+        Store.store_location_set(item,address)
+        
+
+        Store.store_dict.update({address : storeid})
+        Store.store_dict.pop(location)
+        self.id_store_get()
+        
+
+       
+        
        
     def create_store(self):
         create = self.instance.get()
@@ -119,6 +144,7 @@ class Store_Gui:
         
         address = self.display_stores_listbox.get()
         id = Store.store_dict.get(address)
+        print(id)
 
         inventory, price, address = Store_Gui.list_stores[int(id)].inventory_dict_get()
         tkinter.messagebox.showinfo("Dictionaries",f'Inventory: {inventory}\n Price: {price}\n Address: {address}')

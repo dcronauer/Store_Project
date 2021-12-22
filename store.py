@@ -18,7 +18,7 @@ class Store:
         return self.store_address
     def store_id_set(self,store_id):
         self.store_id = store_id
-    def store_location(self,store_address):
+    def store_location_set(self,store_address):
         self.store_address = store_address
     def store_dict_get():
         return Store.store_dict
@@ -46,6 +46,8 @@ class Inventory(Store):
     #accesors item and inventory
     def print_inventory_items(self):
         return self.inventory_dict
+    def store_location_set(self,store_address):
+        self.store_address = store_address
         
 class Register(Inventory):
     def __init__(self,store_address,store_id,cash_balance):
