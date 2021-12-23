@@ -24,6 +24,8 @@ class Store_Gui:
         self.item_count = tkinter.IntVar()
         self.id_store = tkinter.IntVar()
         self.list_box_stores = tkinter.StringVar(value=Store_Gui.list_stores)
+        self.register_name = tkinter.StringVar()
+        self.register_balance = tkinter.IntVar()
         
         self.create_objects()
     def __str__(self):
@@ -87,6 +89,24 @@ class Store_Gui:
         #pack inventory management frame
         self.inventory_management_frame.pack()
 
+        #create register widgets
+        self.register_label = ttk.Label(self.register_frame,text="Enter register name")
+        self.register_entry = ttk.Entry(self.register_frame, width=15,textvariable=self.register_name)
+        self.store_label = ttk.Label(self.register_frame,text="Select store to create register in")
+        self.display_stores_listbox = ttk.Combobox(self.register_frame,value=Store_Gui.id_stores,postcommand=self.update_store_list)
+        self.register_balance_label = ttk.Label(self.register_frame,text="Enter starting balance of register")
+        self.register_balance_entry = ttk.Entry(self.register_frame,width=5,textvaraible=self.register_balance )
+        #pack register widgets
+        self.register_label.pack(side="left")
+        self.register_entry.pack(side="left")
+        self.store_label.pack(side="left")
+        self.display_stores_listbox.pack(side="left")
+        self.register__balance_label.pack(side="left")
+        self.register_balance_entry.pack(side="left")
+        #pack frame
+        self.register_frame.pack()
+
+        
         #create button dill5
         self.dill_button = ttk.Button(self.dill_frame,text="Save Work",command=self.dill_run)
         #pack dill

@@ -50,25 +50,35 @@ class Inventory(Store):
         self.store_address = store_address
         
 class Register(Inventory):
-    def __init__(self,store_address,store_id,cash_balance):
+    def __init__(self,store_address,store_id,cash_balance,register_name,register_id):
         super().__init__(store_address,store_id)
         self.cash_balance = cash_balance
+        self.register_name = register_name
+        self.register_id = register_id
+        self.register_list = []
         
     #accessors    
     def cash_balance_get(self):
         return self.cash_balance
+    def register_list_get(self):
+        return self.register_list
+    def register_name_get(self):
+        return self.register_name
     
     #mutators
     def cash_balance_set(self,cash_balance):
         self.cash_balance = cash_balance
+    def register_name_set(self,register_name):
+        self.register_name = register_name
     
-        
+    def create_order_gui(self):
+       pass     
 def create_order(store, register):
     #create inventory, price, address for store
     inventory, item, address = Inventory.inventory_dict_get(store)
-    
+
     key_list = inventory.keys()
-    
+
     order_dict = {}
     total = 0
     add_cart = -1
@@ -84,9 +94,9 @@ def create_order(store, register):
     sale = get_balance(order_dict, inventory, item,store)
     print(f"Your total is {sale: .2f}")
     balance = register.cash_balance_get()
-    
+
     new_balance = sale + balance
-   
+
     balance = register.cash_balance_set(new_balance)
     balance = register.cash_balance_get()
     
