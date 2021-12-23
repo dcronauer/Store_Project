@@ -63,7 +63,7 @@ class Store_Gui:
         self.store_creation_frame.pack()
 
         #create widgets inventory_management_frame
-        self.display_stores_listbox = ttk.Combobox(self.inventory_management_frame,value=Store_Gui.id_stores,postcommand = self.update_store_list)
+        self.display_stores_listbox = ttk.Combobox(self.inventory_management_frame,value='',postcommand = self.update_store_list)
         self.inventory_label_item = ttk.Label(self.inventory_management_frame,text="Item Name")
         self.inventory_entry_item = ttk.Entry(self.inventory_management_frame, textvariable=self.item_name, width=15)
         self.inventory_label_price = ttk.Label(self.inventory_management_frame,text="Item Price")
@@ -93,15 +93,15 @@ class Store_Gui:
         self.register_label = ttk.Label(self.register_frame,text="Enter register name")
         self.register_entry = ttk.Entry(self.register_frame, width=15,textvariable=self.register_name)
         self.store_label = ttk.Label(self.register_frame,text="Select store to create register in")
-        self.display_stores_listbox = ttk.Combobox(self.register_frame,value=Store_Gui.id_stores,postcommand=self.update_store_list)
+        self.display_stores_cbox = ttk.Combobox(self.register_frame,value='',postcommand=self.update_store_list_register)
         self.register_balance_label = ttk.Label(self.register_frame,text="Enter starting balance of register")
-        self.register_balance_entry = ttk.Entry(self.register_frame,width=5,textvaraible=self.register_balance )
+        self.register_balance_entry = ttk.Entry(self.register_frame,width=5,textvariable=self.register_balance )
         #pack register widgets
         self.register_label.pack(side="left")
         self.register_entry.pack(side="left")
         self.store_label.pack(side="left")
-        self.display_stores_listbox.pack(side="left")
-        self.register__balance_label.pack(side="left")
+        self.display_stores_cbox.pack(side="left")
+        self.register_balance_label.pack(side="left")
         self.register_balance_entry.pack(side="left")
         #pack frame
         self.register_frame.pack()
@@ -135,7 +135,7 @@ class Store_Gui:
         Store.store_dict.update({address : storeid})
         Store.store_dict.pop(location)
         self.id_store_get()
-        
+    
 
        
         
@@ -180,6 +180,12 @@ class Store_Gui:
         for location in keys:
             if location not in self.display_stores_listbox['values']:
                 self.display_stores_listbox['values'] = tuple(list(self.display_stores_listbox['values']) + [location])
+    def update_store_list_register(self):
+        self.display_stores_cbox['values'] = []
+        keys = Store.store_dict.keys()
+        for location in keys:
+            if location not in self.display_stores_cbox['values']:
+                self.display_stores_cbox['values'] = tuple(list(self.display_stores_cbox['values']) + [location])
         
     def add_item(self):
         
