@@ -13,6 +13,8 @@ def main():
 class Store_Gui:
     list_stores = []
     id_stores = []
+    
+    
     def __init__(self):
         self.main_window = tkinter.Tk()
         dill.load_session('dump.pkl')
@@ -96,6 +98,8 @@ class Store_Gui:
         self.display_stores_cbox = ttk.Combobox(self.register_frame,value='',postcommand=self.update_store_list_register)
         self.register_balance_label = ttk.Label(self.register_frame,text="Enter starting balance of register")
         self.register_balance_entry = ttk.Entry(self.register_frame,width=5,textvariable=self.register_balance )
+        self.register_add_button = ttk.Button(self.register_frame,text="Add new register",command=self.add_register)
+        self.register_print_button = ttk.Button(self.register_frame,text="Print register list based on store address",command=self.print_registers)
         #pack register widgets
         self.register_label.pack(side="left")
         self.register_entry.pack(side="left")
@@ -103,6 +107,8 @@ class Store_Gui:
         self.display_stores_cbox.pack(side="left")
         self.register_balance_label.pack(side="left")
         self.register_balance_entry.pack(side="left")
+        self.register_add_button.pack(side="left")
+        self.register_print_button.pack(side="left")
         #pack frame
         self.register_frame.pack()
 
@@ -113,7 +119,7 @@ class Store_Gui:
         self.dill_button.pack()
         #pack frame
         self.dill_frame.pack()
-
+    #this function generates Store dict on load for later use
     def id_store_get(self):
         
         for item in Store_Gui.list_stores:
@@ -136,7 +142,11 @@ class Store_Gui:
         Store.store_dict.pop(location)
         self.id_store_get()
     
-
+    def print_registers(self):
+        location = self.display_stores_cbox.get()
+        store_id  = Store.store_dict[location]
+        store_instance = Store_Gui.list_stores[store_id]
+        print(store_instance.Register.register_dict_get())
        
         
        
@@ -204,7 +214,69 @@ class Store_Gui:
         self.item_name.set('')
         self.item_price.set('')
         self.item_count.set('')
+    def add_register(self):
+        register_name = self.register_entry.get()
+        register_id = len(self.register_dict)
+        cash_balance = self.register_balance_entry.get()
+        store_address = self.display_stores_cbox.get()
+        store_id = Store.store_dict[store_address]
 
+        register_entry = Register(store_address,store_id,cash_balance, register_name, register_id)
+
+        Register.register_dict.update({store_address,register_id})
+
+        print(Register.register_dict)
+
+
+
+        
+
+    '''def create_order(self):
+        #create inventory, price, address for store
+        location = self.display_stores_cbox.get()
+        storeid = Store.store_dict[location]
+        store = Store_Gui.list_stores[int(storeid)]
+        
+        
+        inventory, item, address = Inventory.inventory_dict_get(store)
+
+        key_list = inventory.keys()
+
+        order_dict = {}
+        total = 0
+        add_cart = -1
+        for i in key_list:
+            count = inventory[i]
+            #while loop to make sure order is not over inventory
+            while add_cart < 0 or add_cart > count:
+                add_cart = int(simpledialog.askstring(title="Order Form",prompt="Enter quantity of {i} to order: "))
+                
+            order_dict.update({i : add_cart})
+            add_cart = -1
+        print(order_dict, inventory, item)
+        sale = get_balance(order_dict, inventory, item, store)
+        print(f"Your total is {sale: .2f}")
+        balance = register.cash_balance_get()
+
+        new_balance = sale + balance
+        balance = register.cash_balance_set(new_balance)
+        balance = register.cash_balance_get()
+    def get_balance(self,order_dict, inventory, item,store):
+        key_list = order_dict.keys()
+        balance = 0
+        for i in key_list:
+            if order_dict[i] >0:
+                price = item[i]
+                count = order_dict[i]
+                subtotal = price * count
+                balance += subtotal
+                inventory_new = inventory[i] - count
+                Inventory.update_inventory_count(store,i,inventory_new)
+        balance = balance*1.075
+        
+        return balance'''
+
+        
 
         
 if __name__ == "__main__":

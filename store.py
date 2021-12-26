@@ -55,13 +55,13 @@ class Register(Inventory):
         self.cash_balance = cash_balance
         self.register_name = register_name
         self.register_id = register_id
-        self.register_list = []
+        self.register_dict = {}
         
     #accessors    
     def cash_balance_get(self):
         return self.cash_balance
-    def register_list_get(self):
-        return self.register_list
+    def register_dict_get(self):
+        return self.register_dict
     def register_name_get(self):
         return self.register_name
     
