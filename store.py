@@ -11,6 +11,7 @@ class Store:
         self.store_address = store_address
         Store.store_dict.update({self.store_address : self.store_id})
         
+        
     #store get and set
     def store_id_get(self):
         return self.store_id
@@ -29,6 +30,9 @@ class Inventory(Store):
         super().__init__(store_address,store_id)
         self.inventory_dict = {}
         self.item_dict = {}
+        self.register_dict = {}
+        
+        
        
         
     #mutators item and inventory
@@ -40,22 +44,26 @@ class Inventory(Store):
         self.item_dict.pop(item)
     def update_inventory_count(self,item,count):
         self.inventory_dict.update({item: count})
+    def store_location_set(self,store_address):
+        self.store_address = store_address
      #dictionary calls
     def inventory_dict_get(self):
         return self.inventory_dict, self.item_dict, self.store_address
     #accesors item and inventory
     def print_inventory_items(self):
         return self.inventory_dict
-    def store_location_set(self,store_address):
-        self.store_address = store_address
+    def register_dict_get(self):
+        return self.register_dict
+    
         
 class Register(Inventory):
-    def __init__(self,store_address,store_id,cash_balance,register_name,register_id):
+    def __init__(self,store_address,store_id):
         super().__init__(store_address,store_id)
-        self.cash_balance = cash_balance
-        self.register_name = register_name
-        self.register_id = register_id
+        self.cash_balance = 0
+        self.register_name = ""
+        self.register_id = ""
         self.register_dict = {}
+        
         
     #accessors    
     def cash_balance_get(self):
@@ -70,6 +78,8 @@ class Register(Inventory):
         self.cash_balance = cash_balance
     def register_name_set(self,register_name):
         self.register_name = register_name
+    def register_id_set(self,register_id):
+        self.register_id = register_id
     
     def create_order_gui(self):
        pass     

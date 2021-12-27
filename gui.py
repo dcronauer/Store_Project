@@ -108,7 +108,7 @@ class Store_Gui:
         self.register_balance_label.pack(side="left")
         self.register_balance_entry.pack(side="left")
         self.register_add_button.pack(side="left")
-        self.register_print_button.pack(side="left")
+        #self.register_print_button.pack(side="left")
         #pack frame
         self.register_frame.pack()
 
@@ -143,11 +143,21 @@ class Store_Gui:
         self.id_store_get()
     
     def print_registers(self):
-        location = self.display_stores_cbox.get()
-        store_id  = Store.store_dict[location]
-        store_instance = Store_Gui.list_stores[store_id]
-        print(store_instance.Register.register_dict_get())
-       
+        
+        address = self.display_stores_cbox.get()
+        id = Store.store_dict.get(address)
+        print(id)
+
+        #store_instance = Register
+
+
+
+        
+        
+        #print(dict)
+        
+        #tkinter.messagebox.showinfo("Registers",f'Store: {address}\n {dict}')
+
         
        
     def create_store(self):
@@ -171,7 +181,6 @@ class Store_Gui:
         self.store_address.set('')
         print(Store_Gui.id_stores)
     def inventory_dict(self):
-        
         address = self.display_stores_listbox.get()
         id = Store.store_dict.get(address)
         print(id)
@@ -216,16 +225,22 @@ class Store_Gui:
         self.item_count.set('')
     def add_register(self):
         register_name = self.register_entry.get()
-        register_id = len(self.register_dict)
         cash_balance = self.register_balance_entry.get()
         store_address = self.display_stores_cbox.get()
         store_id = Store.store_dict[store_address]
+        store_object = Store_Gui.list_stores[store_id]
+        
+        
+        register_id = len(store_object.register_dict)
+        print(register_id)
 
-        register_entry = Register(store_address,store_id,cash_balance, register_name, register_id)
+        register_entry = Register(store_address,store_id)
 
-        Register.register_dict.update({store_address,register_id})
+        register_entry.register_dict.update({store_address: store_id})
 
-        print(Register.register_dict)
+        print('test')
+        print(register_entry.register_dict)
+
 
 
 
