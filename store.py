@@ -30,7 +30,7 @@ class Inventory(Store):
         super().__init__(store_address,store_id)
         self.inventory_dict = {}
         self.item_dict = {}
-        self.register_dict = {}
+        
         
         
        
@@ -57,12 +57,14 @@ class Inventory(Store):
     
         
 class Register(Inventory):
-    def __init__(self,store_address,store_id):
+    
+    #initalize routine
+    def __init__(self,store_address,store_id,cash_balance,register_name,register_id):
         super().__init__(store_address,store_id)
-        self.cash_balance = 0
-        self.register_name = ""
-        self.register_id = ""
-        self.register_dict = {}
+        self.cash_balance = cash_balance
+        self.register_name = register_name
+        self.register_id = register_id
+        
         
         
     #accessors    

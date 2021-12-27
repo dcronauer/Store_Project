@@ -11,8 +11,12 @@ def main():
     #set up main loop for gui
     tkinter.mainloop()
 class Store_Gui:
-    list_stores = []
-    id_stores = []
+    list_stores = [] #collection of store instances created
+    id_stores = [] #list of store ids
+    #key is register id and value is register instance
+    registerid_instance_dict = dict()  
+    #key is store_id value is list of register ids
+    register_dict = dict()  
     
     
     def __init__(self):
@@ -108,7 +112,7 @@ class Store_Gui:
         self.register_balance_label.pack(side="left")
         self.register_balance_entry.pack(side="left")
         self.register_add_button.pack(side="left")
-        #self.register_print_button.pack(side="left")
+        self.register_print_button.pack(side="left")
         #pack frame
         self.register_frame.pack()
 
@@ -154,9 +158,9 @@ class Store_Gui:
 
         
         
-        #print(dict)
+        print(dict)
         
-        #tkinter.messagebox.showinfo("Registers",f'Store: {address}\n {dict}')
+        tkinter.messagebox.showinfo("Registers",f'Store: {address}\n {dict}')
 
         
        
@@ -230,16 +234,22 @@ class Store_Gui:
         store_id = Store.store_dict[store_address]
         store_object = Store_Gui.list_stores[store_id]
         
+        print(self.register_dict)
+        register_id = len(self.register_dict)
         
-        register_id = len(store_object.register_dict)
-        print(register_id)
 
-        register_entry = Register(store_address,store_id)
+        register_entry = Register(store_address,store_id,cash_balance,register_name,register_id)
 
-        register_entry.register_dict.update({store_address: store_id})
+        self.registerid_instance_dict.update({register_id: register_entry})
+        
+        if store_id in self.register_dict:
+            
+            self.register_dict[store_id].append(register_id)
+        else:
+            self.register_dict.update({store_id: [register_id]})
 
-        print('test')
-        print(register_entry.register_dict)
+        
+        print(self.register_dict,self.registerid_instance_dict)
 
 
 
