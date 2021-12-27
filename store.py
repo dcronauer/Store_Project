@@ -60,7 +60,8 @@ class Register(Inventory):
     
     #initalize routine
     def __init__(self,store_address,store_id,cash_balance,register_name,register_id):
-        super().__init__(store_address,store_id)
+        self.store_address = store_address
+        self.store_id = store_id
         self.cash_balance = cash_balance
         self.register_name = register_name
         self.register_id = register_id

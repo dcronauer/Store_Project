@@ -13,6 +13,10 @@ def main():
 class Store_Gui:
     list_stores = [] #collection of store instances created
     id_stores = [] #list of store ids
+    list_register = []
+    id_register = []
+
+    
     #key is register id and value is register instance
     registerid_instance_dict = dict()  
     #key is store_id value is list of register ids
@@ -148,19 +152,10 @@ class Store_Gui:
     
     def print_registers(self):
         
-        address = self.display_stores_cbox.get()
-        id = Store.store_dict.get(address)
-        print(id)
-
-        #store_instance = Register
-
-
-
+        print(Store_Gui.register_dict)
+        print(Store_Gui.list_register)
+        print(Store_Gui.list_stores)
         
-        
-        print(dict)
-        
-        tkinter.messagebox.showinfo("Registers",f'Store: {address}\n {dict}')
 
         
        
@@ -235,21 +230,24 @@ class Store_Gui:
         store_object = Store_Gui.list_stores[store_id]
         
         print(self.register_dict)
-        register_id = len(self.register_dict)
+        register_id = len(Store_Gui.list_register)
+        print(register_id)
         
 
         register_entry = Register(store_address,store_id,cash_balance,register_name,register_id)
 
-        self.registerid_instance_dict.update({register_id: register_entry})
+        Store_Gui.registerid_instance_dict.update({register_id: register_entry})
+        Store_Gui.list_register.append(register_entry)
+        Store_Gui.id_register.append(register_id)
         
-        if store_id in self.register_dict:
+        if store_id in Store_Gui.register_dict:
             
-            self.register_dict[store_id].append(register_id)
+            Store_Gui.register_dict[store_id].append(register_id)
         else:
-            self.register_dict.update({store_id: [register_id]})
+            Store_Gui.register_dict.update({store_id: [register_id]})
 
         
-        print(self.register_dict,self.registerid_instance_dict)
+        print(Store_Gui.register_dict,Store_Gui.registerid_instance_dict)
 
 
 
