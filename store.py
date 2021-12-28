@@ -31,10 +31,6 @@ class Inventory(Store):
         self.inventory_dict = {}
         self.item_dict = {}
         
-        
-        
-       
-        
     #mutators item and inventory
     def new_item(self,item ,price, count):
         self.inventory_dict.update({item : count})

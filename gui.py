@@ -27,6 +27,7 @@ class Store_Gui:
         self.main_window = tkinter.Tk()
         dill.load_session('dump.pkl')
         self.id_store_get()
+        
         self.instance = tkinter.StringVar()
         self.store_address = tkinter.StringVar()
         self.item_name = tkinter.StringVar()
@@ -48,7 +49,9 @@ class Store_Gui:
         self.store_creation_frame = tkinter.Frame(self.main_window)
         self.inventory_management_frame = tkinter.Frame(self.main_window)
         self.register_frame = tkinter.Frame(self.main_window)
+        self.order_frame =tkinter.Frame(self.main_window)
         self.dill_frame = tkinter.Frame(self.main_window)
+        
 
         #create widgets store_creation_frame
         self.store_initialize_label_instance = ttk.Label(self.store_creation_frame,text="Enter instance name for new store: ")
@@ -120,14 +123,48 @@ class Store_Gui:
         #pack frame
         self.register_frame.pack()
 
-        
+        #create order widgets
+        self.order_store_label = ttk.Label(self.order_frame,text="Select Store to Order From")
+        self.order_store_cb = ttk.Combobox(self.order_frame, value= "", postcommand=self.polulate_order_combo_store)
+        self.order_registerid_label = ttk.Label(self.order_frame,text="Select register id for order")
+        self.order_registerid_cb = ttk.Combobox(self.order_frame, value='',postcommand=self.update_register_cb)
+
+        #pack widgets
+        self.order_store_label.pack(side="left")
+        self.order_store_cb.pack(side="left")
+        self.order_registerid_label.pack(side="left")
+        self.order_registerid_cb.pack(side="left")
+
+        #pack frame
+        self.order_frame.pack()
+
         #create button dill5
         self.dill_button = ttk.Button(self.dill_frame,text="Save Work",command=self.dill_run)
         #pack dill
         self.dill_button.pack()
         #pack frame
         self.dill_frame.pack()
+    
     #this function generates Store dict on load for later use
+    def polulate_order_combo_store(self):
+        self.order_store_cb['values'] = []
+        keys = Store.store_dict.keys()
+        for location in keys:
+            if location not in self.order_store_cb['values']:
+                self.order_store_cb['values'] = tuple(list(self.display_stores_cbox['values']) + [location])
+                
+        
+    
+    def update_register_cb(self):
+        self.order_registerid_cb['values'] = []
+        location = self.order_store_cb.get()
+        store_id = Store.store_dict[location]
+        print(store_id)
+        list_id = Store_Gui.register_dict[store_id]
+        print(list_id)
+        for id in list_id:
+            self.order_registerid_cb['values'] = tuple(list(self.order_registerid_cb["values"]) + [id])
+
     def id_store_get(self):
         
         for item in Store_Gui.list_stores:
@@ -151,14 +188,9 @@ class Store_Gui:
         self.id_store_get()
     
     def print_registers(self):
+        register = Store_Gui.register_dict
+        tkinter.messagebox.showinfo('Registers by store_id and register_id',f'Store ID: [Register_ID] \n {register}')
         
-        print(Store_Gui.register_dict)
-        print(Store_Gui.list_register)
-        print(Store_Gui.list_stores)
-        
-
-        
-       
     def create_store(self):
         create = self.instance.get()
         idstore = len(Store_Gui.id_stores)
@@ -248,58 +280,6 @@ class Store_Gui:
 
         
         print(Store_Gui.register_dict,Store_Gui.registerid_instance_dict)
-
-
-
-
-        
-
-    '''def create_order(self):
-        #create inventory, price, address for store
-        location = self.display_stores_cbox.get()
-        storeid = Store.store_dict[location]
-        store = Store_Gui.list_stores[int(storeid)]
-        
-        
-        inventory, item, address = Inventory.inventory_dict_get(store)
-
-        key_list = inventory.keys()
-
-        order_dict = {}
-        total = 0
-        add_cart = -1
-        for i in key_list:
-            count = inventory[i]
-            #while loop to make sure order is not over inventory
-            while add_cart < 0 or add_cart > count:
-                add_cart = int(simpledialog.askstring(title="Order Form",prompt="Enter quantity of {i} to order: "))
-                
-            order_dict.update({i : add_cart})
-            add_cart = -1
-        print(order_dict, inventory, item)
-        sale = get_balance(order_dict, inventory, item, store)
-        print(f"Your total is {sale: .2f}")
-        balance = register.cash_balance_get()
-
-        new_balance = sale + balance
-        balance = register.cash_balance_set(new_balance)
-        balance = register.cash_balance_get()
-    def get_balance(self,order_dict, inventory, item,store):
-        key_list = order_dict.keys()
-        balance = 0
-        for i in key_list:
-            if order_dict[i] >0:
-                price = item[i]
-                count = order_dict[i]
-                subtotal = price * count
-                balance += subtotal
-                inventory_new = inventory[i] - count
-                Inventory.update_inventory_count(store,i,inventory_new)
-        balance = balance*1.075
-        
-        return balance'''
-
-        
 
         
 if __name__ == "__main__":
