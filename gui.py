@@ -128,13 +128,17 @@ class Store_Gui:
         self.order_store_cb = ttk.Combobox(self.order_frame, value= "", postcommand=self.polulate_order_combo_store)
         self.order_registerid_label = ttk.Label(self.order_frame,text="Select register id for order")
         self.order_registerid_cb = ttk.Combobox(self.order_frame, value='',postcommand=self.update_register_cb)
+        self.order_balance_button = ttk.Button(self.order_frame,text="Get register balance",command=self.get_balance)
+        self.order_create_button = ttk.Button(self.order_frame, text="Create Order",command=self.create_order_store)
 
         #pack widgets
         self.order_store_label.pack(side="left")
         self.order_store_cb.pack(side="left")
         self.order_registerid_label.pack(side="left")
         self.order_registerid_cb.pack(side="left")
-
+        self.order_balance_button.pack(side='left')
+        self.order_create_button.pack(side="left")
+        
         #pack frame
         self.order_frame.pack()
 
@@ -144,8 +148,66 @@ class Store_Gui:
         self.dill_button.pack()
         #pack frame
         self.dill_frame.pack()
+    def create_order_store(self):
+        store = self.order_store_cb.get()
+        store_id = Store.store_dict[store]
+        print(store_id)
+        store = Store_Gui.list_stores[store_id]
+        print(store)
+        registerid = int(self.order_registerid_cb.get())
+        register = Store_Gui.registerid_instance_dict[registerid]
+
+
+         #create inventory, price, address for store
+        inventory, item, address = store.inventory_dict_get()
+
+        key_list = inventory.keys()
+
+        order_dict = {}
+        total = 0
+        add_cart = -1
+        for i in key_list:
+            count = int(inventory[i])
+            #while loop to make sure order is not over inventory
+            while add_cart < 0 or add_cart > count:
+                add_cart = int(simpledialog.askstring(title="Order",prompt=f"Enter amount of {i} to order:\n Current stock available: {count} "))
+                
+                
+            order_dict.update({i : add_cart})
+            add_cart = -1
+        print(order_dict, inventory, item)
+        sale = self.get_balance_register(order_dict, inventory, item,store)
+        print(f"Your total is {sale: .2f}")
+        balance = int(register.cash_balance_get())
+
+        new_balance = sale + balance
+
+        balance = register.cash_balance_set(new_balance)
+        balance = register.cash_balance_get()
     
+    def get_balance_register(self,order_dict, inventory, item,store):
+        key_list = order_dict.keys()
+        balance = 0
+        for i in key_list:
+            if order_dict[i] >0:
+                price = float(item[i])
+                count = int(order_dict[i])
+                subtotal = price * count
+                balance += subtotal
+                inventory_new = int(inventory[i]) - count
+                Inventory.update_inventory_count(store,i,inventory_new)
+        balance = balance*1.075
+        
+        return balance  
+
     #this function generates Store dict on load for later use
+    def get_balance(self):
+        register_id = int(self.order_registerid_cb.get())
+        location = self.order_store_cb.get()
+        instance = Store_Gui.registerid_instance_dict[register_id]
+        print(instance)
+        balance = int(instance.cash_balance_get())
+        tkinter.messagebox.showinfo(f'Store Location: {location}', f'Register {register_id}\n The balance is {balance:.2f}')
     def polulate_order_combo_store(self):
         self.order_store_cb['values'] = []
         keys = Store.store_dict.keys()
@@ -159,9 +221,9 @@ class Store_Gui:
         self.order_registerid_cb['values'] = []
         location = self.order_store_cb.get()
         store_id = Store.store_dict[location]
-        print(store_id)
+        
         list_id = Store_Gui.register_dict[store_id]
-        print(list_id)
+       
         for id in list_id:
             self.order_registerid_cb['values'] = tuple(list(self.order_registerid_cb["values"]) + [id])
 
